@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FlickDiary - Personal Movie Watchlist</title>
+
+    <!-- Poppins font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Our own CSS file -->
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <!-- ========== SIDEBAR ========== -->
+      <aside class="sidebar">
+        <div class="logo">🎬 FlickDiary</div>
+
+        <nav class="nav">
+          <a href="#" class="nav-link active" data-view="dashboard"
+            >Dashboard</a
+          >
+          <a href="#" class="nav-link" data-view="collection">My Collection</a>
+          <a href="#" class="nav-link" data-view="watchlist">Watchlist</a>
+        </nav>
+      </aside>
+
+      <!-- ========== MAIN CONTENT ========== -->
+      <main class="main">
+        <!-- Header -->
+        <header class="header">
+          <div>
+            <h1>Welcome back! 🌸</h1>
+            <p>
+              Keep track of the movies you love and the ones you want to watch.
+            </p>
+          </div>
+          <button id="addMovieBtn" class="btn btn-primary">+ Add Movie</button>
+        </header>
+
+        <!-- Statistics cards -->
+        <section class="stats" id="statsSection">
+          <div class="stat-card">
+            <p class="stat-label">Total Movies</p>
+            <h2 class="stat-number" id="totalMovies">0</h2>
+          </div>
+          <div class="stat-card">
+            <p class="stat-label">Movies Watched</p>
+            <h2 class="stat-number" id="watchedMovies">0</h2>
+          </div>
+          <div class="stat-card">
+            <p class="stat-label">Want to Watch</p>
+            <h2 class="stat-number" id="wantMovies">0</h2>
+          </div>
+          <div class="stat-card">
+            <p class="stat-label">Average Rating</p>
+            <h2 class="stat-number" id="averageRating">0.0</h2>
+          </div>
+        </section>
+
+        <!-- Search and filters -->
+        <section class="toolbar">
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search movies by title..."
+          />
+
+          <select id="genreFilter">
+            <option value="all">All Genres</option>
+            <option value="Action">Action</option>
+            <option value="Animation">Animation</option>
+            <option value="Comedy">Comedy</option>
+            <option value="Drama">Drama</option>
+            <option value="Fantasy">Fantasy</option>
+            <option value="Horror">Horror</option>
+            <option value="Romance">Romance</option>
+            <option value="Sci-Fi">Sci-Fi</option>
+            <option value="Thriller">Thriller</option>
+            <option value="Other">Other</option>
+          </select>
+
+          <div class="status-filters">
+            <button class="filter-btn active" data-status="all">All</button>
+            <button class="filter-btn" data-status="watched">Watched</button>
+            <button class="filter-btn" data-status="want">Want to Watch</button>
+          </div>
+        </section>
+
+        <!-- Movie grid (JavaScript fills this in later) -->
+        <section class="movie-grid" id="movieGrid"></section>
+
+        <!-- Message shown when no movies match -->
+        <p class="empty-message" id="emptyMessage" hidden>
+          No movies found. Try adding one! 🍿
+        </p>
+      </main>
+    </div>
+
+    <!-- ========== ADD / EDIT MOVIE MODAL ========== -->
+    <div class="modal-overlay" id="movieModal" hidden>
+      <div class="modal">
+        <h2 id="modalTitle">Add Movie</h2>
+
+        <form id="movieForm" novalidate>
+          <div class="form-group">
+            <label for="titleInput">Movie Title *</label>
+            <input
+              type="text"
+              id="titleInput"
+              placeholder="e.g. Spirited Away"
+            />
+            <small class="error" id="titleError"></small>
+          </div>
+
+          <div class="form-group">
+            <label for="yearInput">Release Year *</label>
+            <input type="number" id="yearInput" placeholder="e.g. 2001" />
+            <small class="error" id="yearError"></small>
+          </div>
+
+          <div class="form-group">
+            <label for="genreInput">Genre *</label>
+            <select id="genreInput">
+              <option value="">Select a genre</option>
+              <option value="Action">Action</option>
+              <option value="Animation">Animation</option>
+              <option value="Comedy">Comedy</option>
+              <option value="Drama">Drama</option>
+              <option value="Fantasy">Fantasy</option>
+              <option value="Horror">Horror</option>
+              <option value="Romance">Romance</option>
+              <option value="Sci-Fi">Sci-Fi</option>
+              <option value="Thriller">Thriller</option>
+              <option value="Other">Other</option>
+            </select>
+            <small class="error" id="genreError"></small>
+          </div>
+
+          <div class="form-group">
+            <label for="posterInput">Poster Image URL (optional)</label>
+            <input type="url" id="posterInput" placeholder="https://..." />
+          </div>
+
+          <div class="form-group">
+            <label for="statusInput">Watch Status *</label>
+            <select id="statusInput">
+              <option value="want">Want to Watch</option>
+              <option value="watched">Watched</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Rating (optional)</label>
+            <div class="star-rating" id="starRating">
+              <span class="star" data-value="1">★</span>
+              <span class="star" data-value="2">★</span>
+              <span class="star" data-value="3">★</span>
+              <span class="star" data-value="4">★</span>
+              <span class="star" data-value="5">★</span>
+            </div>
+          </div>
+
+          <div class="modal-buttons">
+            <button type="button" class="btn btn-secondary" id="cancelBtn">
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary">Save Movie</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Our own JavaScript file (at the bottom so the page loads first) -->
+    <script src="js/script.js"></script>
+  </body>
+</html>
